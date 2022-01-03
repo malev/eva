@@ -1,0 +1,14 @@
+---
+- hosts: droplets
+  become: true
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: Install base deps
+      package:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - net-tools
+        - mc

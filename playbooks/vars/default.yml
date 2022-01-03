@@ -1,0 +1,5 @@
+---
+create_user: malev
+setup_user: malev
+copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+timezone: America/Chicago
