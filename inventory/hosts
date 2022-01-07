@@ -1,4 +1,7 @@
-[droplets]
+[digitalocean]
 eva02
 eva03
 eva04
+
+[local]
+192.168.0.2

@@ -1,0 +1,19 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: Start Portainer
+      docker_container:
+        name: portainer
+        image: cr.portainer.io/portainer/portainer-ce:2.9.3
+        state: started
+        recreate: yes
+        restart_policy: always
+        ports:
+          - "8000:8000"
+          - "9443:9443"
+        volumes:
+          - /home/{{ setup_user }}/portainer:/data
+          - /var/run/docker.sock:/var/run/docker.sock

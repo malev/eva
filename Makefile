@@ -12,3 +12,6 @@ setup_digitalocean:
 	poetry run ansible-playbook playbooks/apt.yml -l droplets
 	poetry run ansible-playbook playbooks/dependencies.yml -l droplets
 	poetry run ansible-playbook playbooks/docker.yml -l droplets
+
+homer:
+	poetry run ansible-playbook local/homer.yml -l local

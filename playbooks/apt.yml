@@ -1,4 +1,4 @@
-- hosts: "droplets"
+- hosts: "digitalocean"
   become: yes
   tasks:
     - name: apt

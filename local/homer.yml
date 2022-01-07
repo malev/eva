@@ -1,0 +1,27 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: Homer Copy Configuration Files
+      copy:
+        src: config/homer/
+        dest: /home/{{ setup_user }}/homer
+        owner: malev
+        group: malev
+        mode: 0644
+    - name: Start Homer
+      docker_container:
+        name: homer
+        image: b4bz/homer
+        state: started
+        recreate: yes
+        restart_policy: always
+        ports:
+          - "8080:8080"
+        volumes:
+          - /home/{{ setup_user }}/homer:/www/assets
+        env:
+          UID: "1000"
+          GID: "1000"

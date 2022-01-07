@@ -1,5 +1,5 @@
 ---
-- hosts: droplets
+- hosts: "digitalocean"
   become: true
   vars_files:
     - vars/default.yml
