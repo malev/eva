@@ -8,10 +8,10 @@ destroy_digitalocean:
 	cd digitalocean && terraform destroy -var "do_token=${DO_PAT}" -var "pvt_key=$$HOME/.ssh/id_rsa"
 
 setup_digitalocean:
-	poetry run ansible-playbook playbooks/setup.yml -l droplets --user root --private-key=~/.ssh/id_rsa-terraform
-	poetry run ansible-playbook playbooks/apt.yml -l droplets
-	poetry run ansible-playbook playbooks/dependencies.yml -l droplets
-	poetry run ansible-playbook playbooks/docker.yml -l droplets
+	poetry run ansible-playbook playbooks/setup.yml -l digitalocean --user root --private-key=~/.ssh/id_rsa-terraform
+	poetry run ansible-playbook playbooks/apt.yml -l digitalocean
+	poetry run ansible-playbook playbooks/dependencies.yml -l digitalocean
+	poetry run ansible-playbook playbooks/docker.yml -l digitalocean
 
 homer:
 	poetry run ansible-playbook local/homer.yml -l local
@@ -24,3 +24,6 @@ plex:
 
 pihole:
 	poetry run ansible-playbook local/pihole.yml -l local
+
+nginx:
+	poetry run ansible-playbook local/nginx.yml -l local
