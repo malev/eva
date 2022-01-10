@@ -1,0 +1,27 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: Traefik Copy Configuration File
+      copy:
+        src: config/traefik/
+        dest: /home/{{ setup_user }}/traefik
+        owner: malev
+        group: malev
+        mode: 0644
+    - name: Start Traefik
+      docker_container:
+        name: traefik
+        image: traefik:v2.5
+        state: started
+        recreate: yes
+        restart_policy: always
+        ports:
+          - "8080:8080"
+          - "80:80"
+          - "443:443"
+        volumes:
+          - '/home/{{ setup_user }}/traefik/traefik.yml:/etc/traefik/traefik.yml'
+          - '/var/run/docker.sock:/var/run/docker.sock'

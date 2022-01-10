@@ -1,0 +1,20 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+    - vars/default.yml
+  tasks:
+  - name: Start plex
+    docker_container:
+      name: plex
+      image: plexinc/pms-docker
+      state: started
+      recreate: yes
+      restart_policy: always
+      ports:
+        - "32400:32400"
+      volumes:
+        - /home/{{ setup_user }}/plex/config:/config
+        - /home/{{ setup_user }}/plex/data:/data
+      env:
+        PLEX_CLAIM: claim-TaLvmW8TM4Jjr1cssN3s

@@ -19,7 +19,7 @@
         recreate: yes
         restart_policy: always
         ports:
-          - "8080:8080"
+          - "5678:8080"
         volumes:
           - /home/{{ setup_user }}/homer:/www/assets
         env:
