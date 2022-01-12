@@ -1,24 +1,8 @@
-terraform {
-  required_providers {
-    linode = {
-      source  = "linode/linode"
-      version = "1.17.0"
-    }
-  }
-}
-
-variable "linode_token" {}
-variable "pvt_key" {}
-
-provider "linode" {
-  token = var.linode_token
-}
-
 resource "linode_instance" "eva_instance" {
   label           = "eva02"
   image           = "linode/ubuntu20.04"
   region          = "us-central"
-  type            = "g6-standard-1"
+  type            = "g6-nanode-1"
   tags            = ["eva"]
   authorized_keys = [var.pvt_key]
 }
@@ -31,9 +15,9 @@ resource "linode_domain" "eva_domain" {
 
 resource "linode_domain_record" "eva_domain_record" {
   domain_id   = linode_domain.eva_domain.id
-  name        = "malev.xyz"
-  record_type = "A"
-  target      = linode_instance.eva_instance.id
+  name        = "www"
+  record_type = "CNAME"
+  target      = "malev.xyz"
   ttl_sec     = 300
 }
 
@@ -45,7 +29,7 @@ resource "linode_firewall" "eva_firewall" {
     label    = "allow-http"
     action   = "ACCEPT"
     protocol = "TCP"
-    ipv4     = ["0.0.0.0"]
+    ipv4     = ["0.0.0.0/0"]
     ipv6     = ["ff00::/8"]
   }
 
