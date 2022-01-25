@@ -1,6 +1,7 @@
 //Export this cluster's attributes
 output "kubeconfig" {
-  value = linode_lke_cluster.galileo.kubeconfig
+  value     = linode_lke_cluster.galileo.kubeconfig
+  sensitive = true
 }
 
 output "api_endpoints" {
