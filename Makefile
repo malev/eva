@@ -25,8 +25,17 @@ plex:
 pihole:
 	poetry run ansible-playbook local/pihole.yml -l local
 
+portainer:
+	poetry run ansible-playbook local/portainer.yml -l local
+
 nginx:
 	poetry run ansible-playbook local/nginx.yml -l local
+
+uptime-kuma:
+	poetry run ansible-playbook local/uptime-kuma.yml -l local
+
+yatch:
+	poetry run ansible-playbook local/yatch.yml -l local
 
 linode:
 	cd linode && terraform apply -var "linode_token=${LINODE_TOKEN}" -var "pvt_key=`cat $HOME/.ssh/id_rsa.pub`"

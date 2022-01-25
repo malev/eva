@@ -4,18 +4,17 @@
   vars_files:
     - vars/default.yml
   tasks:
-    - name: Start Portainer
+    - name: Start Yatch
       docker_container:
-        name: portainer
-        image: cr.portainer.io/portainer/portainer-ce:2.9.3
+        name: yatch
+        image: selfhostedpro/yacht
         state: started
         recreate: yes
         restart_policy: always
         networks:
-        - name: "eva"
+          - name: "eva"
         ports:
-          - "8000:8000"
-          - "9443:9443"
+          - "7999:8000"
         volumes:
-          - /home/{{ setup_user }}/portainer:/data
           - /var/run/docker.sock:/var/run/docker.sock
+          - /home/{{ setup_user }}/yatch:/config

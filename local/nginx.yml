@@ -1,0 +1,27 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: Copy Nginx config files
+      copy:
+        src: config/nginx/
+        dest: /home/{{ setup_user }}/nginx
+        owner: malev
+        group: malev
+        mode: 0644
+    - name: Start Nginx
+      docker_container:
+        name: nginx
+        image: nginx
+        state: started
+        recreate: yes
+        restart_policy: always
+        networks:
+        - name: "eva"
+        ports:
+          - "80:80/tcp"
+        volumes:
+          - '/home/{{ setup_user }}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro'
+          - '/home/{{ setup_user }}/nginx/html:/usr/share/nginx/html:ro'

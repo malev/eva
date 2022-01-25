@@ -11,6 +11,8 @@
       state: started
       recreate: yes
       restart_policy: always
+      networks:
+      - name: "eva"
       ports:
         - "32400:32400"
       volumes:
