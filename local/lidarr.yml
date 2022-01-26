@@ -1,0 +1,25 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+  - vars/default.yml
+  tasks:
+  - name: Start Lidarr
+    docker_container:
+      name: lidarr
+      image: lscr.io/linuxserver/lidarr
+      state: started
+      recreate: yes
+      restart_policy: unless-stopped
+      networks:
+      - name: "eva"
+      env:
+        PUID: "1000"
+        PGID: "1000"
+        TZ: "{{ timezone }}"
+      volumes:
+        - /home/{{ setup_user }}/lidarr/config:/config
+        - /home/{{ setup_user }}/lidarr/music:/music
+        - /home/{{ setup_user }}/downloads:/downloads
+      ports:
+        - 8686:8686

@@ -1,0 +1,26 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+  - vars/default.yml
+  tasks:
+  - name: Start Radaar
+    docker_container:
+      name: radaar
+      image: lscr.io/linuxserver/radarr
+      state: started
+      recreate: yes
+      restart_policy: unless-stopped
+      networks:
+      - name: "eva"
+      env:
+        PUID: "1000"
+        PGID: "1000"
+        UMASK_SET: "022"
+        TZ: "{{ timezone }}"
+      volumes:
+        - /home/{{ setup_user }}/radarr/config:/config
+        - /home/{{ setup_user }}/radarr/movies:/movies
+        - /home/{{ setup_user }}/downloads:/downloads
+      ports:
+        - 7878:7878

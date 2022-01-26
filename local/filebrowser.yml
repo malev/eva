@@ -1,0 +1,29 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+    - vars/default.yml
+  tasks:
+    - name: FileBrowser Copy Configuration Files
+      copy:
+        src: config/filebrowser/
+        dest: /home/{{ setup_user }}/filebrowser
+        owner: malev
+        group: malev
+        mode: 0644
+    - name: Start FileBrowser
+      docker_container:
+        name: filebrowser
+        image: filebrowser/filebrowser
+        state: started
+        recreate: yes
+        restart_policy: always
+        networks:
+        - name: "eva"
+        ports:
+          - "7997:80/tcp"
+        volumes:
+          - '/home/{{ setup_user }}:/srv'
+          - '/home/{{ setup_user }}/filebrowser/database.db:/database.db'
+          - '/home/{{ setup_user }}/filebrowser/settings.json:/.filebrowser.json'
+        user: "1000:1000"

@@ -13,6 +13,9 @@ setup_digitalocean:
 	poetry run ansible-playbook playbooks/dependencies.yml -l digitalocean
 	poetry run ansible-playbook playbooks/docker.yml -l digitalocean
 
+filebrowser:
+	poetry run ansible-playbook local/filebrowser.yml -l local
+
 homer:
 	poetry run ansible-playbook local/homer.yml -l local
 
@@ -30,6 +33,9 @@ portainer:
 
 nginx:
 	poetry run ansible-playbook local/nginx.yml -l local
+
+transmission:
+	poetry run ansible-playbook local/transmission.yml -l local
 
 uptime-kuma:
 	poetry run ansible-playbook local/uptime-kuma.yml -l local

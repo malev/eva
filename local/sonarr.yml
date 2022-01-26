@@ -1,0 +1,25 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+  - vars/default.yml
+  tasks:
+  - name: Start Sonarr
+    docker_container:
+      name: sonarr
+      image: lscr.io/linuxserver/sonarr
+      state: started
+      recreate: yes
+      restart_policy: unless-stopped
+      networks:
+      - name: "eva"
+      env:
+        PUID: "1000"
+        PGID: "1000"
+        TZ: "{{ timezone }}"
+      volumes:
+        - /home/{{ setup_user }}/sonarr/config:/config
+        - /home/{{ setup_user }}/sonarr/tvseries:/tv
+        - /home/{{ setup_user }}/downloads:/downloads
+      ports:
+        - 8989:8989

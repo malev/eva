@@ -1,0 +1,25 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+  - vars/default.yml
+  tasks:
+  - name: Start Jackett
+    docker_container:
+      name: jackett
+      image: lscr.io/linuxserver/jackett
+      state: started
+      recreate: yes
+      restart_policy: unless-stopped
+      networks:
+      - name: "eva"
+      env:
+        PUID: "1000"
+        PGID: "1000"
+        UMASK_SET: "022"
+        TZ: "{{ timezone }}"
+      volumes:
+        - /home/{{ setup_user }}/jackett/config:/config
+        - /home/{{ setup_user }}/downloads:/downloads
+      ports:
+        - 9117:9117
