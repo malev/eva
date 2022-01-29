@@ -11,6 +11,8 @@
       state: started
       recreate: yes
       restart_policy: unless-stopped
+      networks:
+      - name: "eva"
       ports:
         - 9091:9091
         - 51413:51413
