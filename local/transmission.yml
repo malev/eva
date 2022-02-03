@@ -19,7 +19,7 @@
         - 51413:51413/udp
       volumes:
         - /home/{{ setup_user }}/transmission/config:/config
-        - /home/{{ setup_user }}/transmission/downloads:/downloads
+        - /home/{{ setup_user }}/downloads:/downloads
         - /home/{{ setup_user }}/watch:/watch
       env:
         PUID: "1000"
