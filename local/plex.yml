@@ -18,7 +18,7 @@
       #   - "32400:32400"
       volumes:
         - /home/{{ setup_user }}/plex/config:/config
-        - /home/{{ setup_user }}/plex/data:/data
+        - /home/{{ setup_user }}/media:/data
       env:
         PLEX_CLAIM: claim-TaLvmW8TM4Jjr1cssN3s
         PUID: "1000"

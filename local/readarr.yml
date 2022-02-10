@@ -1,0 +1,26 @@
+---
+- hosts: "local"
+  become: yes
+  vars_files:
+  - vars/default.yml
+  tasks:
+  - name: Start Readarr
+    docker_container:
+      name: readarr
+      image: ghcr.io/hotio/readarr:pr-505e517
+      state: started
+      recreate: yes
+      restart_policy: unless-stopped
+      networks:
+      - name: "eva"
+      env:
+        PUID: "1000"
+        PGID: "1000"
+        UMASK_SET: "022"
+        TZ: "{{ timezone }}"
+      volumes:
+        - /home/{{ setup_user }}/readarr/config:/config
+        - /home/{{ setup_user }}/readarr/books:/books
+        - /home/{{ setup_user }}/downloads:/downloads
+      ports:
+        - 8787:8787
