@@ -36,3 +36,6 @@ terraform.rc
 
 # Mac
 .DS_Store
+
+# VSCode
+.vscode

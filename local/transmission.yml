@@ -2,28 +2,28 @@
 - hosts: "local"
   become: yes
   vars_files:
-  - vars/default.yml
+    - vars/default.yml
   tasks:
-  - name: Start Transmission
-    docker_container:
-      name: Transmission
-      image: lscr.io/linuxserver/transmission
-      state: started
-      recreate: yes
-      restart_policy: unless-stopped
-      networks:
-      - name: "eva"
-      ports:
-        - 9091:9091
-        - 51413:51413
-        - 51413:51413/udp
-      volumes:
-        - /home/{{ setup_user }}/transmission/config:/config
-        - /home/{{ setup_user }}/downloads:/downloads
-        - /home/{{ setup_user }}/watch:/watch
-      env:
-        PUID: "1000"
-        PGID: "1000"
-        TZ: "{{ timezone }}"
-        DELUGE_LOGLEVEL: error
-        TRANSMISSION_WEB_HOME: /combustion-release/
+    - name: Start Transmission
+      docker_container:
+        name: Transmission
+        image: lscr.io/linuxserver/transmission
+        state: started
+        recreate: yes
+        restart_policy: unless-stopped
+        networks:
+          - name: "eva"
+        ports:
+          - 9091:9091
+          - 51413:51413
+          - 51413:51413/udp
+        volumes:
+          - /home/{{ setup_user }}/transmission/config:/config
+          - /home/{{ setup_user }}/downloads:/downloads
+          - /home/{{ setup_user }}/watch:/watch
+        env:
+          PUID: "1000"
+          PGID: "1000"
+          TZ: "{{ timezone }}"
+          DELUGE_LOGLEVEL: error
+          TRANSMISSION_WEB_HOME: /combustion-release/

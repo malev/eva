@@ -1,15 +1,14 @@
 ---
-- hosts: "local"
-  become: yes
+- hosts: "do"
   vars_files:
     - vars/default.yml
   tasks:
     - name: Copy Nginx config files
       copy:
         src: config/nginx/
-        dest: /home/{{ setup_user }}/nginx
-        owner: malev
-        group: malev
+        dest: /home/{{ do_user }}/nginx
+        owner: "{{ do_user }}"
+        group: "{{ do_user }}"
         mode: 0644
     - name: Start Nginx
       docker_container:
@@ -19,11 +18,12 @@
         recreate: yes
         restart_policy: always
         networks:
-          - name: "eva"
+          - name: "killcss"
         ports:
           - "80:80/tcp"
           - "443:443"
         volumes:
-          - "/home/{{ setup_user }}/nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
-          - "/home/{{ setup_user }}/nginx/html:/usr/share/nginx/html:ro"
-          - "/home/{{ setup_user }}/nginx/ssl:/etc/nginx/ssl/"
+          - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro"
+          - ./nginx/html:/usr/share/nginx/html:ro"
+          - ./certbot/www:/var/www/certbot/:ro
+          - ./certbot/conf/:/etc/nginx/ssl/:ro
