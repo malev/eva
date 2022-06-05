@@ -9,7 +9,7 @@ resource "linode_instance" "eva_instance" {
 
 resource "linode_domain" "eva_domain" {
   domain    = "malev.xyz"
-  soa_email = "marcosvanetta@gmail.com"
+  soa_email = "m@gmail.com"
   type      = "master"
 }
 
