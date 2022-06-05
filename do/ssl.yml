@@ -31,7 +31,7 @@
       docker_container:
         name: certbot
         image: certbot/certbot
-        command: certonly --webroot --webroot-path /var/www/certbot/ --non-interactive --agree-tos -m m@gmail.com -d killcss.xyz -d www.killcss.xyz
+        command: certonly --webroot --webroot-path /var/www/certbot/ --non-interactive --agree-tos -m {{ do_email }} -d killcss.xyz -d www.killcss.xyz
         state: started
         recreate: no
         restart_policy: no
