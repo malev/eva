@@ -46,5 +46,7 @@ yatch:
 linode:
 	cd linode && terraform apply -var "linode_token=${LINODE_TOKEN}" -var "pvt_key=`cat $HOME/.ssh/id_rsa.pub`"
 
+do_setup:
+	poetry run ansible-playbook do/setup.yml -l do -K
 do_nginx:
 	poetry run ansible-playbook do/nginx.yml -l do
