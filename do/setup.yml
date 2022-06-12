@@ -5,6 +5,10 @@
     - vars/default.yml
 
   tasks:
+    - name: Upgrade Packages
+      apt:
+        name: "*"
+        state: latest
     - name: Install required system packages
       apt: name={{ item }} state=latest update_cache=yes
       loop:
