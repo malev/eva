@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: transmission
+  name: thelounge
   labels:
-    app: transmission
+    app: thelounge
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: transmission
+      app: thelounge
   template:
     metadata:
       labels:
-        app: transmission
+        app: thelounge
     spec:
       containers:
-        - name: transmission
-          image: lscr.io/linuxserver/transmission:3.00-r5-ls125
+        - name: nextcloud
+          image: lscr.io/linuxserver/thelounge:v4.3.1-ls96
           imagePullPolicy: IfNotPresent
           env:
             - name: TZ
@@ -25,61 +25,39 @@ spec:
               value: "1000"
             - name: PGID
               value: "1000"
-            - name: USER
-              value: malev
-            - name: PASS
-              value: password
-            - name: TRANSMISSION_WEB_HOME
-              value: /combustion-release/
           ports:
-            - containerPort: 9091
+            - containerPort: 443
               protocol: TCP
-            - containerPort: 51413
-              protocol: TCP
-            - containerPort: 51413
-              protocol: UDP
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: downloads
-              mountPath: /downloads
           resources:
             requests:
-              memory: "64Mi"
+              memory: "128Mi"
               cpu: "250m"
             limits:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "500m"
       volumes:
         - name: config
           hostPath:
-            path: /home/malev/transmission/config
-            type: DirectoryOrCreate
-        - name: downloads
-          hostPath:
-            path: /home/malev/transmission/downloads
+            path: /home/malev/thelounge/config
             type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: transmission
+  name: thelounge
   labels:
-    service: transmission
+    service: thelounge
 spec:
   type: ClusterIP
   selector:
-    app: transmission
+    app: thelounge
   ports:
     - name: http
-      port: 9091
+      port: 9000
       protocol: TCP
-    - name: torrenthttp
-      port: 51413
-      protocol: TCP
-    - name: torrentudp
-      port: 51413
-      protocol: UDP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -89,13 +67,13 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-    - host: transmission.killcss.xyz
+    - host: irc.killcss.xyz
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: transmission
+                name: thelounge
                 port:
-                  number: 9091
+                  number: 9000

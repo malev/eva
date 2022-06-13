@@ -20,6 +20,11 @@ spec:
       labels:
         app: pihole
     spec:
+      hostNetwork: true
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 1.1.1.1
       containers:
         - name: pihole
           image: pihole/pihole:2022.05
@@ -44,11 +49,11 @@ spec:
               protocol: TCP
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "250m"
-            limits:
               memory: "128Mi"
               cpu: "500m"
+            limits:
+              memory: "256Mi"
+              cpu: "750m"
           volumeMounts:
             - name: etc
               mountPath: /etc/pihole
@@ -58,11 +63,11 @@ spec:
         - name: etc
           hostPath:
             path: /home/malev/data/pihole/etc
-            type: Directory
+            type: DirectoryOrCreate
         - name: dnsmasq
           hostPath:
             path: /home/malev/data/pihole/dnsmasq.d
-            type: Directory
+            type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: Service
@@ -75,22 +80,20 @@ spec:
   type: ClusterIP
   selector:
     app: pihole
+  externalIPs:
+    - 159.203.120.132
   ports:
-    - name: http
-      port: 80
+    - port: 8000
+      targetPort: 80
+      name: pihole-admin
+    - port: 53
+      targetPort: 53
       protocol: TCP
-    - name: https
-      port: 443
-      protocol: TCP
-    - name: dns-tcp
-      port: 53
-      protocol: TCP
-    - name: dns-udp
-      port: 53
+      name: dns-tcp
+    - port: 53
+      targetPort: 53
       protocol: UDP
-    - name: dhcps
-      port: 67
-      protocol: UDP
+      name: dns-udp
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -110,4 +113,4 @@ spec:
               service:
                 name: pihole
                 port:
-                  number: 80
+                  number: 8000
