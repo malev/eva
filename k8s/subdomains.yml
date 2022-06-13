@@ -11,8 +11,13 @@ data:
         sendfile on;
 
         server {
+          server_name www.codingnews.info;
+          return 301 https://codingnews.info$request_uri;
+        }
+
+        server {
           listen 80;
-          server_name asistencia.codingnews.info asistencia.killcss.xyz;
+          server_name asistencia.codingnews.info;
 
           error_log  stderr warn;
           access_log  /dev/stdout;
@@ -43,7 +48,7 @@ data:
 
         server {
           listen 80;
-          server_name ccd.codingnews.info ccd.killcss.xyz;
+          server_name ccd.codingnews.info;
 
           error_log  stderr warn;
           access_log  /dev/stdout;
@@ -74,7 +79,7 @@ data:
 
         server {
           listen 80;
-          server_name csv.codingnews.info csv.killcss.xyz;
+          server_name csv.codingnews.info;
 
           error_log  stderr warn;
           access_log  /dev/stdout;
@@ -112,6 +117,7 @@ metadata:
     app: subdomains
 spec:
   replicas: 1
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: subdomains
@@ -166,27 +172,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-    - host: asistencia.killcss.xyz
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: subdomains
-                port:
-                  number: 80
-    - host: ccd.killcss.xyz
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: subdomains
-                port:
-                  number: 80
-    - host: csv.killcss.xyz
+    - host: "*.codingnews.info"
       http:
         paths:
           - path: /
