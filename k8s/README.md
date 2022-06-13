@@ -35,3 +35,5 @@ https://medium.com/@muneeburrehman2610/kubernetes-persistent-volume-for-beginner
 https://kubernetes.io/docs/concepts/storage/storage-classes/
 
 https://medium.com/@xcoulon/deploying-your-first-web-app-on-minikube-6e98d2884b3a
+
+Nginx example https://gist.github.com/petitviolet/d36f33d145d0bbf4b54eb187b79d0244
