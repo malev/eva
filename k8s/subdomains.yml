@@ -1,0 +1,184 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf-configmap
+  namespace: default
+data:
+  nginx.conf: |
+    events {}
+    http {
+        include mime.types;
+        sendfile on;
+
+        server {
+          server_name www.codingnews.info;
+          return 301 https://codingnews.info$request_uri;
+        }
+
+        server {
+          listen 80;
+          server_name asistencia.codingnews.info;
+
+          error_log  stderr warn;
+          access_log  /dev/stdout;
+
+          set $bucket "asistencia.codingnews.info.s3-website-us-east-1.amazonaws.com";
+
+          location /  {
+            rewrite ^/(.*) /$1 break;
+            resolver 1.1.1.1;
+            proxy_http_version     1.1;
+            proxy_redirect off;
+            proxy_set_header       Connection "";
+            proxy_set_header       Authorization '';
+            proxy_set_header       Host $bucket;
+            proxy_set_header       X-Real-IP $remote_addr;
+            proxy_set_header       X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_hide_header      x-amz-id-2;
+            proxy_hide_header      x-amz-request-id;
+            proxy_hide_header      x-amz-meta-server-side-encryption;
+            proxy_hide_header      x-amz-server-side-encryption;
+            proxy_hide_header      Set-Cookie;
+            proxy_ignore_headers   Set-Cookie;
+            proxy_intercept_errors on;
+            add_header             Cache-Control max-age=31536000;
+            proxy_pass             http://$bucket;
+          }
+        }
+
+        server {
+          listen 80;
+          server_name ccd.codingnews.info;
+
+          error_log  stderr warn;
+          access_log  /dev/stdout;
+
+          set $bucket "ccd.codingnews.info.s3-website-us-east-1.amazonaws.com";
+
+          location /  {
+            rewrite ^/(.*) /$1 break;
+            resolver 1.1.1.1;
+            proxy_http_version     1.1;
+            proxy_redirect off;
+            proxy_set_header       Connection "";
+            proxy_set_header       Authorization '';
+            proxy_set_header       Host $bucket;
+            proxy_set_header       X-Real-IP $remote_addr;
+            proxy_set_header       X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_hide_header      x-amz-id-2;
+            proxy_hide_header      x-amz-request-id;
+            proxy_hide_header      x-amz-meta-server-side-encryption;
+            proxy_hide_header      x-amz-server-side-encryption;
+            proxy_hide_header      Set-Cookie;
+            proxy_ignore_headers   Set-Cookie;
+            proxy_intercept_errors on;
+            add_header             Cache-Control max-age=31536000;
+            proxy_pass             http://$bucket;
+          }
+        }
+
+        server {
+          listen 80;
+          server_name csv.codingnews.info;
+
+          error_log  stderr warn;
+          access_log  /dev/stdout;
+
+          set $bucket "csv.codingnews.info.s3-website-us-east-1.amazonaws.com";
+
+          location /  {
+            rewrite ^/(.*) /$1 break;
+            resolver 1.1.1.1;
+            proxy_http_version     1.1;
+            proxy_redirect off;
+            proxy_set_header       Connection "";
+            proxy_set_header       Authorization '';
+            proxy_set_header       Host $bucket;
+            proxy_set_header       X-Real-IP $remote_addr;
+            proxy_set_header       X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_hide_header      x-amz-id-2;
+            proxy_hide_header      x-amz-request-id;
+            proxy_hide_header      x-amz-meta-server-side-encryption;
+            proxy_hide_header      x-amz-server-side-encryption;
+            proxy_hide_header      Set-Cookie;
+            proxy_ignore_headers   Set-Cookie;
+            proxy_intercept_errors on;
+            add_header             Cache-Control max-age=31536000;
+            proxy_pass             http://$bucket;
+          }
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subdomains
+  labels:
+    app: subdomains
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: subdomains
+  template:
+    metadata:
+      labels:
+        app: subdomains
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: nginx-conf-file
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+      volumes:
+        - name: nginx-conf-file
+          configMap:
+            name: nginx-conf-configmap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: subdomains
+  labels:
+    service: subdomains
+spec:
+  type: ClusterIP
+  selector:
+    app: subdomains
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: subdomain-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: "*.codingnews.info"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: subdomains
+                port:
+                  number: 80
