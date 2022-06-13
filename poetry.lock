@@ -25,6 +25,14 @@ PyYAML = "*"
 resolvelib = ">=0.5.3,<0.6.0"
 
 [[package]]
+name = "argparse"
+version = "1.4.0"
+description = "Python command-line parsing library"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "cffi"
 version = "1.15.0"
 description = "Foreign Function Interface for Python calling C code."
@@ -131,7 +139,7 @@ test = ["commentjson", "packaging", "pytest"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "e8bf441107961d04ce16fdd8d135f78437bd4a48768990dfb8cceef3e75d8455"
+content-hash = "2e05e74f45df7be141a26c31b54141c729e9eeb229c6c7fc0568fed8e5ee17a4"
 
 [metadata.files]
 ansible = [
@@ -139,6 +147,10 @@ ansible = [
 ]
 ansible-core = [
     {file = "ansible-core-2.12.1.tar.gz", hash = "sha256:a4508707262be11bb4dd98a006f1b14817879a055e6b6c46ad9fca8894fb3073"},
+]
+argparse = [
+    {file = "argparse-1.4.0-py2.py3-none-any.whl", hash = "sha256:c31647edb69fd3d465a847ea3157d37bed1f95f19760b11a47aa91c04b666314"},
+    {file = "argparse-1.4.0.tar.gz", hash = "sha256:62b089a55be1d8949cd2bc7e0df0bddb9e028faefc8c32038cc84862aefdd6e4"},
 ]
 cffi = [
     {file = "cffi-1.15.0-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:c2502a1a03b6312837279c8c1bd3ebedf6c12c4228ddbad40912d671ccc8a962"},
