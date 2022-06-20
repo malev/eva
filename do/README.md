@@ -4,25 +4,27 @@
 
 ### Create Droplet
 
-`python do/do.py killcss.xyz --memory 1`
-`ssh root@NEWIP`
-`ssh malev@NEWIP`
+```
+python do/do.py killcss.xyz --memory 1
+ssh root@NEWIP
+ssh malev@NEWIP
+```
 
 ### Basic Firewall
 
-1.- Read the guide
+1. Read the guide
 
 ## Docker
 
 ### Installation
 
-1.- `poetry run ansible-playbook do/setup.yml -l do -K`
+1. `poetry run ansible-playbook do/setup.yml -l do -K`
 
 ### Validation
 
-1.- SSH into the server
-2.- `sudo systemctl status docker` <- Validate that docker deamon is running
-3.- `docker run hello-world` <- Testing docker
+1. SSH into the server
+2. `sudo systemctl status docker` <- Validate that docker deamon is running
+3. `docker run hello-world` <- Testing docker
 
 ## Running Services
 
