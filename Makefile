@@ -19,9 +19,6 @@ filebrowser:
 homer:
 	poetry run ansible-playbook local/homer.yml -l local
 
-traefik:
-	poetry run ansible-playbook local/traefik.yml -l local
-
 plex:
 	poetry run ansible-playbook local/plex.yml -l local
 
